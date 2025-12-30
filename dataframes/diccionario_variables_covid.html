@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diccionario de Variables - Estudio COVID-19</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .descripcion {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            line-height: 1.8;
+            font-size: 1.05em;
+            color: #333;
+        }
+        
+        .ficha-tecnica-titulo {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .ficha-tecnica {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: #f0f4ff;
+            border-radius: 8px;
+        }
+        
+        .ficha-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .ficha-label {
+            font-size: 0.85em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .ficha-valor {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .tabla-header {
+            margin-bottom: 30px;
+        }
+        
+        .tabla-header h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .filtros {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .filtros h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .filtro-grupo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .filtro-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filtro-item label {
+            font-size: 0.9em;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .filtro-item input,
+        .filtro-item select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-family: inherit;
+        }
+        
+        .filtro-item input:focus,
+        .filtro-item select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .botones-filtro {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-filtrar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-filtrar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-limpiar {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-limpiar:hover {
+            background: #d0d0d0;
+        }
+        
+        .resultado-filtro {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.95em;
+            margin-top: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        
+        th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+            border: 1px solid #ddd;
+        }
+        
+        td {
+            padding: 14px 16px;
+            border: 1px solid #e0e0e0;
+            font-size: 0.95em;
+        }
+        
+        tbody tr {
+            transition: background-color 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background-color: #f5f7ff;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #fafbfc;
+        }
+        
+        tbody tr.oculto {
+            display: none;
+        }
+        
+        .numero {
+            font-weight: 600;
+            color: #667eea;
+            text-align: center;
+            width: 60px;
+        }
+        
+        .tipo-numerica {
+            background-color: #e8f4f8;
+            color: #0277bd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .tipo-categorica {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .escala {
+            font-size: 0.9em;
+            color: #555;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .badge-nominal {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-ordinal {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .badge-intervalo {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-razon {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .celda-vacia {
+            color: #ccc;
+        }
+        
+        .codigos {
+            font-size: 0.9em;
+            color: #555;
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+        
+        @media (max-width: 768px) {
+            .ficha-tecnica {
+                grid-template-columns: 1fr;
+            }
+            
+            .filtro-grupo {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            table {
+                font-size: 0.85em;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Diccionario de Variables</h1>
+            <p>Estudio COVID-19 - Manejo Anestésico de Vía Aérea</p>
+        </div>
+        
+        <div class="content">
+            <div class="descripcion">
+                <strong>Descripción del Estudio:</strong><br><br>
+                Estudio realizado en pacientes con edades de entre 22 a 85 años con diagnóstico de SARS-CoV-2, que requirieron atención anestésica para el manejo de vía aérea ya sea intubaciones orotraqueales, recambios de sondas endotraqueales o reintubaciones y traqueostomías percutáneas.
+            </div>
+            
+            <div class="ficha-tecnica-titulo">Ficha Técnica</div>
+            
+            <div class="ficha-tecnica">
+                <div class="ficha-item">
+                    <div class="ficha-label">Total de Variables</div>
+                    <div class="ficha-valor">76</div>
+                </div>
+                <div class="ficha-item">
+                    <div class="ficha-label">Número de Observaciones</div>
+                    <div class="ficha-valor">153</div>
+                </div>
+                <div class="ficha-item">
+                    <div class="ficha-label">Formato del Dataframe</div>
+                    <div class="ficha-valor">CSV</div>
+                </div>
+            </div>
+            
+            <div class="tabla-header">
+                <h2>Cuadro de Variables</h2>
+            </div>
+            
+            <div class="filtros">
+                <h3>🔍 Filtros de Búsqueda</h3>
+                <div class="filtro-grupo">
+                    <div class="filtro-item">
+                        <label for="filtro-nombre">Nombre Variable:</label>
+                        <input type="text" id="filtro-nombre" placeholder="Buscar por nombre...">
+                    </div>
+                    <div class="filtro-item">
+                        <label for="filtro-tipo">Tipo:</label>
+                        <select id="filtro-tipo">
+                            <option value="">Todos</option>
+                            <option value="Numérica">Numérica</option>
+                            <option value="Categórica">Categórica</option>
+                        </select>
+                    </div>
+                    <div class="filtro-item">
+                        <label for="filtro-escala">Escala:</label>
+                        <select id="filtro-escala">
+                            <option value="">Todas</option>
+                            <option value="Nominal">Nominal</option>
+                            <option value="Ordinal">Ordinal</option>
+                            <option value="Intervalo">Intervalo</option>
+                            <option value="Razón">Razón</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="botones-filtro">
+                    <button class="btn btn-filtrar" onclick="aplicarFiltros()">🔍 Aplicar Filtros</button>
+                    <button class="btn btn-limpiar" onclick="limpiarFiltros()">✕ Limpiar Filtros</button>
+                </div>
+                <div class="resultado-filtro">
+                    Mostrando: <span id="resultado-count">77</span> de 77 variables
+                </div>
+            </div>
+            
+            <table id="tabla-variables">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">#</th>
+                        <th style="width: 180px;">Nombre Variable</th>
+                        <th style="width: 200px;">Descripción</th>
+                        <th style="width: 110px;">Tipo</th>
+                        <th style="width: 110px;">Escala</th>
+                        <th style="width: 100px;">Unidades</th>
+                        <th style="width: 320px;">Códigos</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr data-nombre="correlativo" data-tipo="" data-escala="">
+                        <td class="numero">1</td>
+                        <td><strong>correlativo</strong></td>
+                        <td>Número de boleta</td>
+                        <td class="celda-vacia">—</td>
+                        <td class="celda-vacia">—</td>
+                        <td class="celda-vacia">—</td>
+                        <td class="celda-vacia">—</td>
+                    </tr>
+
+                    <tr data-nombre="edad" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">2</td>
+                        <td><strong>edad</strong></td>
+                        <td>Edad</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>años</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="imc" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">3</td>
+                        <td><strong>imc</strong></td>
+                        <td>IMC</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>kg/m²</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="estado_nutricional" data-tipo="Categórica" data-escala="Ordinal">
+                        <td class="numero">4</td>
+                        <td><strong>estado_nutricional</strong></td>
+                        <td>Clasificación IMC</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-ordinal">Ordinal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">1: Normal, 2: Sobrepeso, 3: Obesidad I, 4: Obesidad II, 5: Obesidad III</span></td>
+                    </tr>
+
+                    <tr data-nombre="sexo" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">5</td>
+                        <td><strong>sexo</strong></td>
+                        <td>Sexo</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: Femenino, 1: Masculino</span></td>
+                    </tr>
+
+                    <tr data-nombre="escolaridad" data-tipo="Categórica" data-escala="Ordinal">
+                        <td class="numero">6</td>
+                        <td><strong>escolaridad</strong></td>
+                        <td>Escolaridad</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-ordinal">Ordinal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: Analfabeta, 1: Primaria, 2: Secundaria, 3: Bachillerato, 4: Universidad</span></td>
+                    </tr>
+
+                    <tr data-nombre="residencia" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">7</td>
+                        <td><strong>residencia</strong></td>
+                        <td>Residencia</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">1 = Ciudad de México, 2 = Estado de México, 4 = Guerrero, 9 = Tabasco, 10 = Puebla</span></td>
+                    </tr>
+
+                    <tr data-nombre="fc" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">8</td>
+                        <td><strong>fc</strong></td>
+                        <td>Frecuencia cardiaca</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>bpm</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="fr" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">9</td>
+                        <td><strong>fr</strong></td>
+                        <td>Frecuencia respiratoria</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>rpm</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="so2" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">10</td>
+                        <td><strong>so2</strong></td>
+                        <td>SO2</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>%</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="ta_sistolic" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">11</td>
+                        <td><strong>ta_sistolic</strong></td>
+                        <td>PAS</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mmHg</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="ta_diastolic" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">12</td>
+                        <td><strong>ta_diastolic</strong></td>
+                        <td>PAD</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mmHg</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="tam" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">13</td>
+                        <td><strong>tam</strong></td>
+                        <td>PAM</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mmHg</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="temperatura" data-tipo="Numérica" data-escala="Intervalo">
+                        <td class="numero">14</td>
+                        <td><strong>temperatura</strong></td>
+                        <td>Temperatura</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-intervalo">Intervalo</span></td>
+                        <td>°c</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="has" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">15</td>
+                        <td><strong>has</strong></td>
+                        <td>Hipertensión arterial sistémica</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="glasgow" data-tipo="Categórica" data-escala="Ordinal">
+                        <td class="numero">16</td>
+                        <td><strong>glasgow</strong></td>
+                        <td>Glasgow</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-ordinal">Ordinal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">No codificada</span></td>
+                    </tr>
+
+                    <tr data-nombre="clasificacion_glasgow" data-tipo="Categórica" data-escala="Ordinal">
+                        <td class="numero">17</td>
+                        <td><strong>clasificacion_glasgow</strong></td>
+                        <td>Clasificación Glasgow</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-ordinal">Ordinal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">1 = Consciente, 2 = Estupor ligero, 3 = Coma</span></td>
+                    </tr>
+
+                    <tr data-nombre="dm2" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">18</td>
+                        <td><strong>dm2</strong></td>
+                        <td>Diabetes mellitus 2</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="enf_resp_cronica" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">19</td>
+                        <td><strong>enf_resp_cronica</strong></td>
+                        <td>Enfermedad respiratoria crónica</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="sofa" data-tipo="Categórica" data-escala="Ordinal">
+                        <td class="numero">20</td>
+                        <td><strong>sofa</strong></td>
+                        <td>SOFA</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-ordinal">Ordinal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">No codificada</span></td>
+                    </tr>
+
+                    <tr data-nombre="clasificacion_sofa" data-tipo="Categórica" data-escala="Ordinal">
+                        <td class="numero">21</td>
+                        <td><strong>clasificacion_sofa</strong></td>
+                        <td>Clasificación SOFA</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-ordinal">Ordinal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0 =  Sin fallo orgánico, 1 = Disfunción orgánica, 2 = Fallo orgánico</span></td>
+                    </tr>
+
+                    <tr data-nombre="qsofa_mayor2" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">22</td>
+                        <td><strong>qsofa_mayor2</strong></td>
+                        <td>Q SOFA > 2</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="curb65" data-tipo="Categórica" data-escala="Ordinal">
+                        <td class="numero">23</td>
+                        <td><strong>curb65</strong></td>
+                        <td>CURB 65</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-ordinal">Ordinal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">No codificada</span></td>
+                    </tr>
+
+                    <tr data-nombre="curb_65may3" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">24</td>
+                        <td><strong>curb_65may3</strong></td>
+                        <td>CURB 65 > 3</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="tabaquismo" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">25</td>
+                        <td><strong>tabaquismo</strong></td>
+                        <td>Tabaquismo</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="dias_inicio_sintomas" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">26</td>
+                        <td><strong>dias_inicio_sintomas</strong></td>
+                        <td>Días de inicio de síntomas</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>días</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="fiebre" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">27</td>
+                        <td><strong>fiebre</strong></td>
+                        <td>Fiebre</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="tos" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">28</td>
+                        <td><strong>tos</strong></td>
+                        <td>Tos</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="disnea" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">29</td>
+                        <td><strong>disnea</strong></td>
+                        <td>Disnea</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="mialgias" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">30</td>
+                        <td><strong>mialgias</strong></td>
+                        <td>Mialgias</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="artralgias" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">31</td>
+                        <td><strong>artralgias</strong></td>
+                        <td>Artlagias</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="cefalea" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">32</td>
+                        <td><strong>cefalea</strong></td>
+                        <td>Cefalea</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="rinorrea" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">33</td>
+                        <td><strong>rinorrea</strong></td>
+                        <td>Rinorrea</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="congestion_nasal" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">34</td>
+                        <td><strong>congestion_nasal</strong></td>
+                        <td>Congestión nasal</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="diarrea" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">35</td>
+                        <td><strong>diarrea</strong></td>
+                        <td>Diarrea</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="dolor_toracico" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">36</td>
+                        <td><strong>dolor_toracico</strong></td>
+                        <td>Dolor torácico</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="anosmia" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">37</td>
+                        <td><strong>anosmia</strong></td>
+                        <td>Anosmia</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="adinamia" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">38</td>
+                        <td><strong>adinamia</strong></td>
+                        <td>Adinamia</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="astenia" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">39</td>
+                        <td><strong>astenia</strong></td>
+                        <td>Astenia</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="fatiga" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">40</td>
+                        <td><strong>fatiga</strong></td>
+                        <td>Fatiga</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="neutrofilos" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">41</td>
+                        <td><strong>neutrofilos</strong></td>
+                        <td>Neutrófilos</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>%</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="linfocitos" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">42</td>
+                        <td><strong>linfocitos</strong></td>
+                        <td>Linfocitos</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>%</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="hemoglobina" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">43</td>
+                        <td><strong>hemoglobina</strong></td>
+                        <td>Hemoglobina</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>g/dL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="hematocrito" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">44</td>
+                        <td><strong>hematocrito</strong></td>
+                        <td>Hematocrito</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>%</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="plaquetas" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">45</td>
+                        <td><strong>plaquetas</strong></td>
+                        <td>Recuento plaquetario</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>×10³/µL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="ldh" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">46</td>
+                        <td><strong>ldh</strong></td>
+                        <td>LDH</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>U/L</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="albumina" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">47</td>
+                        <td><strong>albumina</strong></td>
+                        <td>Albúmina</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>g/dL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="urea" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">48</td>
+                        <td><strong>urea</strong></td>
+                        <td>Urea</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mg/dL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="creatitina" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">49</td>
+                        <td><strong>creatitina</strong></td>
+                        <td>Creatinina</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mg/dL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="bun" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">50</td>
+                        <td><strong>bun</strong></td>
+                        <td>BUN</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mg/dL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="na" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">51</td>
+                        <td><strong>na</strong></td>
+                        <td>Na</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mEq/L</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="k" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">52</td>
+                        <td><strong>k</strong></td>
+                        <td>K</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mEq/L</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="hco3" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">53</td>
+                        <td><strong>hco3</strong></td>
+                        <td>HCO3</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mEq/L</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="bt" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">54</td>
+                        <td><strong>bt</strong></td>
+                        <td>Bilirrubinas totales</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mg/dL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="leucos" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">55</td>
+                        <td><strong>leucos</strong></td>
+                        <td>Leucocitos</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>×10³/µL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="glucosa" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">56</td>
+                        <td><strong>glucosa</strong></td>
+                        <td>Glucosa</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mg/dL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="calcio" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">57</td>
+                        <td><strong>calcio</strong></td>
+                        <td>Ca</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mg/dL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="cl" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">58</td>
+                        <td><strong>cl</strong></td>
+                        <td>Cl</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mEq/L</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="tgo" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">59</td>
+                        <td><strong>tgo</strong></td>
+                        <td>TGO</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>U/L</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="tgp" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">60</td>
+                        <td><strong>tgp</strong></td>
+                        <td>TGP</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>U/L</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="dimero_d" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">61</td>
+                        <td><strong>dimero_d</strong></td>
+                        <td>Dímero D</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>ng/mL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="procalcitonina" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">62</td>
+                        <td><strong>procalcitonina</strong></td>
+                        <td>Procalcitonina</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>ng/mL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="pcr" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">63</td>
+                        <td><strong>pcr</strong></td>
+                        <td>PCR</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mg/L</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="ferritina" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">64</td>
+                        <td><strong>ferritina</strong></td>
+                        <td>Ferritina</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>ng/mL</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="fio2" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">65</td>
+                        <td><strong>fio2</strong></td>
+                        <td>FiO2</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>%</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="ph" data-tipo="Numérica" data-escala="Intervalo">
+                        <td class="numero">66</td>
+                        <td><strong>ph</strong></td>
+                        <td>pH</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-intervalo">Intervalo</span></td>
+                        <td>unidades</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="po2" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">67</td>
+                        <td><strong>po2</strong></td>
+                        <td>PO2</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mmHg</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="pco2" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">68</td>
+                        <td><strong>pco2</strong></td>
+                        <td>PCO2</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mmHg</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="ex_base_b" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">69</td>
+                        <td><strong>ex_base_b</strong></td>
+                        <td>Exceso de base</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mEq/L</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="saturacion" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">70</td>
+                        <td><strong>saturacion</strong></td>
+                        <td>Saturación</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>%</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="lactato" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">71</td>
+                        <td><strong>lactato</strong></td>
+                        <td>Lactato</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>mmol/L</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="dias_estancia_hospitalaria" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">72</td>
+                        <td><strong>dias_estancia_hospitalaria</strong></td>
+                        <td>Días de estancia hospitalaria</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>días</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="dias_vmi" data-tipo="Numérica" data-escala="Razón">
+                        <td class="numero">73</td>
+                        <td><strong>dias_vmi</strong></td>
+                        <td>Días VMI</td>
+                        <td><span class="tipo-numerica">Numérica</span></td>
+                        <td><span class="badge badge-razon">Razón</span></td>
+                        <td>días</td>
+                        <td><span class="codigos">No aplica</span></td>
+                    </tr>
+
+                    <tr data-nombre="reintubacion_recambio" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">74</td>
+                        <td><strong>reintubacion_recambio</strong></td>
+                        <td>Reintubación recambio</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="traqueostomia" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">75</td>
+                        <td><strong>traqueostomia</strong></td>
+                        <td>Traqueostomía</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                    <tr data-nombre="letalidad" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">76</td>
+                        <td><strong>letalidad</strong></td>
+                        <td>Letalidad</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: Vivo, 1: Fallecido</span></td>
+                    </tr>
+
+                    <tr data-nombre="complicaciones" data-tipo="Categórica" data-escala="Nominal">
+                        <td class="numero">77</td>
+                        <td><strong>complicaciones</strong></td>
+                        <td>Complicaciones</td>
+                        <td><span class="tipo-categorica">Categórica</span></td>
+                        <td><span class="badge badge-nominal">Nominal</span></td>
+                        <td>No aplica</td>
+                        <td><span class="codigos">0: No, 1: Sí</span></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p>Diccionario de variables generado automáticamente | Asesoría Estadística y Tesis</p>
+            <p style="margin-top: 10px; opacity: 0.7;">27 de December de 2025 | 06:42:38</p>
+        </div>
+    </div>
+    
+    <script>
+        function aplicarFiltros() {
+            const filtroNombre = document.getElementById('filtro-nombre').value.toLowerCase();
+            const filtroTipo = document.getElementById('filtro-tipo').value;
+            const filtroEscala = document.getElementById('filtro-escala').value;
+            
+            const tabla = document.getElementById('tabla-variables');
+            const filas = tabla.querySelectorAll('tbody tr');
+            let visibles = 0;
+            
+            filas.forEach(fila => {
+                const nombre = fila.getAttribute('data-nombre').toLowerCase();
+                const tipo = fila.getAttribute('data-tipo');
+                const escala = fila.getAttribute('data-escala');
+                
+                let mostrar = true;
+                
+                // Filtro por nombre
+                if (filtroNombre && !nombre.includes(filtroNombre)) {
+                    mostrar = false;
+                }
+                
+                // Filtro por tipo
+                if (filtroTipo && tipo !== filtroTipo) {
+                    mostrar = false;
+                }
+                
+                // Filtro por escala
+                if (filtroEscala && escala !== filtroEscala) {
+                    mostrar = false;
+                }
+                
+                if (mostrar) {
+                    fila.classList.remove('oculto');
+                    visibles++;
+                } else {
+                    fila.classList.add('oculto');
+                }
+            });
+            
+            document.getElementById('resultado-count').textContent = visibles;
+        }
+        
+        function limpiarFiltros() {
+            document.getElementById('filtro-nombre').value = '';
+            document.getElementById('filtro-tipo').value = '';
+            document.getElementById('filtro-escala').value = '';
+            
+            const tabla = document.getElementById('tabla-variables');
+            const filas = tabla.querySelectorAll('tbody tr');
+            filas.forEach(fila => {
+                fila.classList.remove('oculto');
+            });
+            
+            document.getElementById('resultado-count').textContent = filas.length;
+        }
+        
+        // Permitir filtrar al presionar Enter
+        document.getElementById('filtro-nombre').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                aplicarFiltros();
+            }
+        });
+    </script>
+</body>
+</html>
